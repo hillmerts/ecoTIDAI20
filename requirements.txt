@@ -21,3 +21,4 @@ sklearn==0.0
 folium==0.13.0
 pymoo==0.6.0
 osmnx==1.2.2
+Flask==2.2.2

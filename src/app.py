@@ -4,14 +4,15 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 from dash_bootstrap_templates import load_figure_template
 import dash_leaflet as dl
-
+from flask import Flask
 import pandas as pd
 import dash
 
-app = Dash(__name__, use_pages=True,external_stylesheets=[dbc.themes.FLATLY])
-load_figure_template('LUX')
 
-server = app.server
+app = Flask(__name__)
+server = app.run
+dash_app = Dash(__name__, server = app, use_pages=True,external_stylesheets=[dbc.themes.FLATLY])
+load_figure_template('LUX')
 
 # padding for the page content
 CONTENT_STYLE = {
@@ -36,8 +37,6 @@ navbar = dbc.NavbarSimple(
     dark=True,
 )
 
-
-
 content = html.Div(id="page-content", children=[], style=CONTENT_STYLE)
 
 app.layout = html.Div([
@@ -48,4 +47,4 @@ app.layout = html.Div([
 
 
 if __name__ == '__main__':
-	app.run_server(debug=True, port=80)
+	server(host='0.0.0.0',debug=True, port=80)
