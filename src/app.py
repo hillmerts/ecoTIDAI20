@@ -9,9 +9,7 @@ import pandas as pd
 import dash
 
 
-app = Flask(__name__)
-server = app.run
-dash_app = Dash(__name__, server = app, use_pages=True,external_stylesheets=[dbc.themes.FLATLY])
+app = Dash(__name__, use_pages=True,external_stylesheets=[dbc.themes.FLATLY])
 load_figure_template('LUX')
 
 # padding for the page content
@@ -47,4 +45,4 @@ app.layout = html.Div([
 
 
 if __name__ == '__main__':
-	server(host='0.0.0.0',debug=True, port=80)
+	app.run_server(host='0.0.0.0',debug=True, port=80)
