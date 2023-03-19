@@ -11,7 +11,7 @@ import dash
 app = Dash(__name__, use_pages=True,external_stylesheets=[dbc.themes.FLATLY])
 load_figure_template('LUX')
 
-
+server = app.server
 
 # padding for the page content
 CONTENT_STYLE = {
