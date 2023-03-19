@@ -19,3 +19,4 @@ openpyxl==3.0.10
 utm==0.7.0
 sklearn==0.0
 folium==0.13.0
+pymoo==0.6.0
