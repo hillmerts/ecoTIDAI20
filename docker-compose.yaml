@@ -13,3 +13,4 @@ services:
       - "3000:3000"
     volumes:
       - ./EcoTiDAi-Frontend:/EcoTiDAi-Frontend
+    command: bash -c "npm start"
