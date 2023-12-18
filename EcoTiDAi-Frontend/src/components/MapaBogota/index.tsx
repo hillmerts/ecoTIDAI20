@@ -27,11 +27,13 @@ interface PuntoRuta {
 interface MapProps{
     ubicaciones?: Posicion[];
     ruta?: PuntoRuta[];
+    random?: number,
 }
 
 const MapaBogota: FC<MapProps> = ({
     ubicaciones,
     ruta,
+    random,
 }) => {
 
     const posicionBogota : Posicion = {
@@ -40,7 +42,6 @@ const MapaBogota: FC<MapProps> = ({
         longitud: -74.0817500,
     };
     return (
-
         <div id="map">
             <MapContainer center={[posicionBogota.latitud, posicionBogota.longitud]} zoom={13} scrollWheelZoom={true} className={styles.leaflet}>
                 <TileLayer
@@ -50,12 +51,12 @@ const MapaBogota: FC<MapProps> = ({
                 <MarkerClusterGroup
                     chunkedLoading
                 >
-                {ubicaciones &&
+                {ubicaciones?.length &&
                 ubicaciones?.map((posicion, index) => {
                     return (
                     <Marker position={[posicion.latitud, posicion.longitud]} key={index}>
                     <Popup>
-                        {posicion.direccion}
+                        {posicion.direccion} {random}
                     </Popup>
                     </Marker>
                     );    

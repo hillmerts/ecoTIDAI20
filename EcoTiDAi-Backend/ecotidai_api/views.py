@@ -32,7 +32,7 @@ class PuntoRecoleccionViewSet(viewsets.ModelViewSet):
     def obtener_consolidados(self, request):
         queryset = self.get_queryset()
 
-        queryset = filtrar_fechas(queryset, request.query_params)        
+        queryset = filtrar_fechas(queryset, request.query_params)  
 
         response = {
             "total_llantas": obtener_total_llantas(queryset),
@@ -41,6 +41,7 @@ class PuntoRecoleccionViewSet(viewsets.ModelViewSet):
             "kilometros_recorridos": obtener_kilometros_recorridos(queryset),
             "primera_fecha": obtener_primera_fecha(self.get_queryset())
         }
+        
         return Response(response)
 
 

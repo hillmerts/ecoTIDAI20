@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import styles from './styles.module.scss';
 import MapaBogota from "components/MapaBogota";
 import Cargando from "components/Cargando"
@@ -15,36 +15,39 @@ interface DataProps
 {
   titulo: string,
   cantidad: number,
-  fecha: string,
+  fechaInicio: string,
+  fechaFin: string
 }
 
 const HistoricoData : FC<DataProps> = observer(({
   titulo,
   cantidad,
-  fecha,
+  fechaInicio,
+  fechaFin,
 }) => {
   return (
   <div className={styles.data}>
     <div className={styles.title}>{titulo}</div>
     <div className={styles.number}>{cantidad}</div>
-    <div className={styles.date}>desde {fecha}</div>
+    <div className={styles.date}>desde {fechaInicio} hasta {fechaFin}</div>
   </div>
   );
 })
 
-const CustomInput = ({ value, onClick }: { value?: string; onClick?: () => void }) => (
-  <InputGroup  onClick={onClick}  className="mb-3">
-    <Form.Control value={value} readOnly/>
+const CustomInput = forwardRef(({value, onClick}: {value?: string, onClick?: ()=> void}, ref: React.Ref<HTMLInputElement>) => (
+  <InputGroup onClick={onClick} className="mb-3">
+    <Form.Control readOnly value={value} ref={ref}/>
     <InputGroup.Text>
       <FontAwesomeIcon icon={faCalendar} />
     </InputGroup.Text>
   </InputGroup>
-);
+));
 
 const Historico: FC = () => {
 
     const store = useStore();
 
+    const [forceMapRender, setForceMapRender] = useState<number>(1);
     const [fechaInicio, setFechaInicio] = useState<Date|null>(null);
     const [fechaFin, setFechaFin] = useState<Date|null>(null);
 
@@ -57,19 +60,21 @@ const Historico: FC = () => {
     },[fechaInicio, fechaFin])
 
     useEffect(()=>{
-      cargarHistorico();       
-    },[])    
+      cargarHistorico();  
+      setForceMapRender(forceMapRender+1);     
+    },[fechaInicio,fechaFin])   
 
     return ( 
         <div className={styles.layout}>
-          {!(store.historico.posicionesArray.length > 0) ?
+          {!(store.historico.initialized) ?
             <Cargando/>
             :
             <>
             <div className={styles.mapa}>
-              {store.historico.posiciones &&
+              {(store.historico.posiciones && forceMapRender) &&
                 <MapaBogota
                   ubicaciones={store.historico.posicionesArray}
+                  random={forceMapRender}
                 />
               }
             </div>
@@ -104,12 +109,16 @@ const Historico: FC = () => {
                   <HistoricoData
                     titulo="Neumáticos recogidos"
                     cantidad={store.historico.totalLlantas}
-                    fecha={store.historico.primeraFecha}
+                    fechaInicio={fechaInicio ? fechaInicio.toLocaleDateString("es-CO") :
+                     (new Date(store.historico.primeraFecha)).toLocaleDateString("es-CO")}
+                    fechaFin={fechaFin ? fechaFin!.toLocaleDateString("es-CO") : (new Date()).toLocaleDateString("es-CO")}
                     />
                     <HistoricoData
                     titulo="PQRS por atender"
                     cantidad={store.historico.pqrsPendientes}
-                    fecha={store.historico.primeraFecha}
+                    fechaInicio={fechaInicio ? fechaInicio.toLocaleDateString("es-CO") :
+                     (new Date(store.historico.primeraFecha)).toLocaleDateString("es-CO")}
+                    fechaFin={fechaFin ? fechaFin!.toLocaleDateString("es-CO") : (new Date()).toLocaleDateString("es-CO")}
                     />
                 </div>
                 <div className={styles.row}>
@@ -117,12 +126,16 @@ const Historico: FC = () => {
                   <HistoricoData
                     titulo="Ubicaciones Atendidas"
                     cantidad={store.historico.ubicacionesAtendidas}
-                    fecha={store.historico.primeraFecha}
+                    fechaInicio={fechaInicio ? fechaInicio.toLocaleDateString("es-CO") :
+                     (new Date(store.historico.primeraFecha)).toLocaleDateString("es-CO")}
+                    fechaFin={fechaFin ? fechaFin!.toLocaleDateString("es-CO") : (new Date()).toLocaleDateString("es-CO")}
                     />
                   <HistoricoData
                     titulo="Kilómetros Recorridos"
                     cantidad={store.historico.kilometrosRecorridos}
-                    fecha={store.historico.primeraFecha}
+                    fechaInicio={fechaInicio ? fechaInicio.toLocaleDateString("es-CO") :
+                     (new Date(store.historico.primeraFecha)).toLocaleDateString("es-CO")}
+                    fechaFin={fechaFin ? fechaFin!.toLocaleDateString("es-CO") : (new Date()).toLocaleDateString("es-CO")}
                     />
                 </div>
             </div>

@@ -14,31 +14,35 @@ def queryset_to_dataframe(queryset,columns,types):
 
 def filtrar_fechas(queryset, params):
       
-      if "start_date" in params:
-            start_date = params["start_date"]
-            queryset = queryset.filter(fecha__gte=datetime.date(start_date, "yyyy-MM-dd"))
+      #raise Exception(params)
 
-      if  "end_date" in params:
-            end_date = params["end_date"]
-            queryset = queryset.filter(fecha__lte=datetime.date(end_date, "yyyy-MM-dd"))
+      if "fechaInicio" in params:
+            start_date = params["fechaInicio"]
+            queryset = queryset.filter(fecha__gte=datetime.strptime(start_date,'%Y-%m-%dT%H:%M:%S.%fZ'))
+
+      if  "fechaFin" in params:
+            end_date = params["fechaFin"]
+            queryset = queryset.filter(fecha__lte=datetime.strptime(end_date, '%Y-%m-%dT%H:%M:%S.%fZ'))
 
       return queryset
 
 def obtener_total_llantas(queryset):
-      suma_llantas = queryset.aggregate(
-            total_bicicleta=Sum("bicicleta"),
-            total_motocicleta=Sum("motocicleta"),
-            total_automovil13=Sum("automovil13"),
-            total_automovil14=Sum("automovil14"),
-            total_automovil15=Sum("automovil15"),
-            total_camioneta16=Sum("camioneta16"),
-            total_camioneta17=Sum("camioneta17"),
-            total_camioneta18=Sum("camioneta18"),
-            total_camioneta19=Sum("camioneta19"),
-            total_especiales=Sum("especiales"),
-        )
-
-      return reduce(lambda x,y : x+y , suma_llantas.values())
+      if queryset.count()>0:
+            suma_llantas = queryset.aggregate(
+                  total_bicicleta=Sum("bicicleta"),
+                  total_motocicleta=Sum("motocicleta"),
+                  total_automovil13=Sum("automovil13"),
+                  total_automovil14=Sum("automovil14"),
+                  total_automovil15=Sum("automovil15"),
+                  total_camioneta16=Sum("camioneta16"),
+                  total_camioneta17=Sum("camioneta17"),
+                  total_camioneta18=Sum("camioneta18"),
+                  total_camioneta19=Sum("camioneta19"),
+                  total_especiales=Sum("especiales"),
+            )
+            
+            return reduce(lambda x,y : x+y , suma_llantas.values())
+      return 0
 
 def obtener_pqrs_pendientes(queryset):
       return queryset.filter(recoleccion=False).count()

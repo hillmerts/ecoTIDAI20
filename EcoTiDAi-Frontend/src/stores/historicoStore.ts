@@ -30,17 +30,15 @@ export class HistoricoStore extends Model({
 
   @modelFlow
     cargarPuntosHistorico = _async (function*(this: HistoricoStore, fechaInicio: Date|null, fechaFin: Date|null){
-        if(!this.initialized){
-          const data = yield* _await(
-              Historico.obtenerPuntos(fechaInicio, fechaFin)
-            );
-          
-            data.forEach((punto: Posicion, index: number) => {
-              this.posiciones.set(index.toString(), punto)
-            });
 
-          this.initialized = true;
-        }
+      const data = yield* _await(
+        Historico.obtenerPuntos(fechaInicio, fechaFin)
+      );
+      this.posiciones.clear();
+      data.forEach((punto: Posicion, index: number) => {
+        this.posiciones.set(index.toString(), punto)
+      });
+      this.initialized = true;
     })
   
   @modelFlow

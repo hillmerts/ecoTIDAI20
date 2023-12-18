@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { camelizeKeys } from 'humps';
+import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { camelizeKeys, decamelizeKeys } from 'humps';
 
 const fetchApi: AxiosInstance = axios.create({
     baseURL: 'http://localhost:8000/api',
@@ -21,5 +21,23 @@ fetchApi.interceptors.response.use((response: AxiosResponse) => {
   
     return response;
   });
+
+// Axios middleware to convert all api requests to snake_case
+// fetchApi.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+//   const newConfig = { ...config };
+
+//   if (newConfig.headers['Content-Type'] === 'multipart/form-data')
+//     return newConfig;
+
+//   if (config.params) {
+//     newConfig.params = decamelizeKeys(config.params);
+//   }
+
+//   if (config.data) {
+//     newConfig.data = decamelizeKeys(config.data);
+//   }
+
+//   return newConfig;
+// });
 
 export default fetchApi;
