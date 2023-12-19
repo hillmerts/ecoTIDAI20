@@ -41,7 +41,7 @@ class PuntoRecoleccionViewSet(viewsets.ModelViewSet):
             "kilometros_recorridos": obtener_kilometros_recorridos(queryset),
             "primera_fecha": obtener_primera_fecha(self.get_queryset())
         }
-        
+
         return Response(response)
 
 
@@ -85,7 +85,7 @@ class PuntoRecoleccionViewSet(viewsets.ModelViewSet):
     def recolectar(self, request, pk):
         punto = get_object_or_404(self.queryset, pk=pk)
         punto.recoleccion = True
-        punto.save()
+        punto.save(update_fields=["recoleccion"])
         mensaje = {"recoleccion": True}
         return Response(mensaje, status=status.HTTP_200_OK)
     

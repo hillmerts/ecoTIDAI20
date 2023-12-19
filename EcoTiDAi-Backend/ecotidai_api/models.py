@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.db.models import F
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 import datetime
 from .utils import get_lat_log
 
@@ -65,7 +65,7 @@ class PuntoRecoleccion(models.Model):
     
 
 # method for updating
-@receiver(pre_save, sender=PuntoRecoleccion, dispatch_uid="update_latlog_puntorecoleccion")
+@receiver(post_save, sender=PuntoRecoleccion, dispatch_uid="update_latlog_puntorecoleccion")
 def update_latlog(sender, instance, created, **kwargs):
     if created:
     
@@ -75,7 +75,7 @@ def update_latlog(sender, instance, created, **kwargs):
             raise Exception("La direccion no pudo ser localizada")    
         instance.latitud = latlog[0]
         instance.longitud = latlog[1]
-        pre_save.disconnect(receiver=update_latlog, sender=PuntoRecoleccion, dispatch_uid="update_latlog_puntorecoleccion")
+        post_save.disconnect(receiver=update_latlog, sender=PuntoRecoleccion, dispatch_uid="update_latlog_puntorecoleccion")
         instance.save()
-        pre_save.connect(receiver=update_latlog, sender=PuntoRecoleccion, dispatch_uid="update_latlog_puntorecoleccion")
+        post_save.connect(receiver=update_latlog, sender=PuntoRecoleccion, dispatch_uid="update_latlog_puntorecoleccion")
         

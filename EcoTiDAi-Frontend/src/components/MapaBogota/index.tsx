@@ -27,13 +27,11 @@ interface PuntoRuta {
 interface MapProps{
     ubicaciones?: Posicion[];
     ruta?: PuntoRuta[];
-    random?: number,
 }
 
 const MapaBogota: FC<MapProps> = ({
     ubicaciones,
     ruta,
-    random,
 }) => {
 
     const posicionBogota : Posicion = {
@@ -56,7 +54,7 @@ const MapaBogota: FC<MapProps> = ({
                     return (
                     <Marker position={[posicion.latitud, posicion.longitud]} key={index}>
                     <Popup>
-                        {posicion.direccion} {random}
+                        {posicion.direccion}
                     </Popup>
                     </Marker>
                     );    

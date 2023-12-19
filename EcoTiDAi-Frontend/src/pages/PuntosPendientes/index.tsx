@@ -8,6 +8,7 @@ import { Form } from "react-bootstrap";
 import ConfirmacionModal from "components/ConfirmacionModal";
 import MensajeModal from "components/MensajeModal";
 import { Posicion } from "constant";
+import { useOutsideClick } from "hooks/useOutsideClick";
 
 interface PuntoARecolectarProps {
   puntoPendiente: PuntoPendiente;
@@ -21,6 +22,7 @@ interface TablaPendientesProps {
   focusPunto: (id: number) => void;
   puntoSeleccionado?: PuntoPendiente;
   recolectarPunto: (id: number) => void;
+  removerFocus: () => void; 
   reRender: () => void;
 }
 
@@ -30,16 +32,19 @@ const TablaPendientes = observer(React.forwardRef<HTMLTableRowElement,TablaPendi
   focusPunto,
   puntoSeleccionado,
   recolectarPunto,
+  removerFocus,
   reRender,
 },
 puntoRef,
 ) => {
 
+  const tableRef = useOutsideClick(removerFocus);
+
   return (
     <>
     {puntosPendientes.length > 0 &&
     <> 
-      <table>
+      <table ref={tableRef}>
         <thead>
           <tr>
             <td className={styles.td}>Localidad</td>
@@ -209,7 +214,7 @@ const PuntosPendientes: FC = () => {
       puntoSeleccionado.current = punto;
       
       if (punto) setUbicacionesMapa([punto.Posicion]);
-    }, [])
+    },[]);
 
     const clearFocus = useCallback(() => {
       puntoRef.current?.blur();
@@ -232,13 +237,13 @@ const PuntosPendientes: FC = () => {
           await store.puntosPendientes.cargarPuntosPendientes();
           setUbicacionesMapa(store.puntosPendientes.posiciones);  
         }
-        fetchData().catch(console.error)
+        fetchData().then().catch(console.error)
         setReRender(false);
       }
     },[reRender])
 
     useEffect(() => {
-      console.log(ubicacionesMapa);
+      //console.log(ubicacionesMapa);
     },[ubicacionesMapa]);
 
     return (
@@ -250,7 +255,7 @@ const PuntosPendientes: FC = () => {
                 ubicaciones={ubicacionesMapa}
               />
           </div>
-          <div className={styles.info} onClick={() => clearFocus()}>
+          <div className={styles.info}>
               <h1>Puntos Pendientes</h1>
               <p>Los siguientes puntos se encuentran pendientes de Recolección</p>
               <TablaPendientes
@@ -258,6 +263,7 @@ const PuntosPendientes: FC = () => {
                 focusPunto={focusPunto}
                 puntoSeleccionado={puntoSeleccionado.current}
                 recolectarPunto={recolectarPunto}
+                removerFocus={clearFocus}
                 reRender={() => setReRender(true)}
               />
           </div>

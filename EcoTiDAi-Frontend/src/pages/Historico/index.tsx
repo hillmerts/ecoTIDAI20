@@ -47,7 +47,6 @@ const Historico: FC = () => {
 
     const store = useStore();
 
-    const [forceMapRender, setForceMapRender] = useState<number>(1);
     const [fechaInicio, setFechaInicio] = useState<Date|null>(null);
     const [fechaFin, setFechaFin] = useState<Date|null>(null);
 
@@ -60,8 +59,7 @@ const Historico: FC = () => {
     },[fechaInicio, fechaFin])
 
     useEffect(()=>{
-      cargarHistorico();  
-      setForceMapRender(forceMapRender+1);     
+      cargarHistorico();     
     },[fechaInicio,fechaFin])   
 
     return ( 
@@ -71,10 +69,9 @@ const Historico: FC = () => {
             :
             <>
             <div className={styles.mapa}>
-              {(store.historico.posiciones && forceMapRender) &&
+              {(store.historico.posiciones) &&
                 <MapaBogota
                   ubicaciones={store.historico.posicionesArray}
-                  random={forceMapRender}
                 />
               }
             </div>
