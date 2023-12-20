@@ -1,19 +1,16 @@
-import { PuntoCluster } from "constant";
 import fetchApi from "./base";
+import { APIRuta } from "./types/ruta";
 
-export const obtenerRuta = async (
+export const obtenerRutas = async (
     
-    ) : Promise<PuntoCluster[]> => {
+    ) : Promise<APIRuta[]> => {
 
         try{
             const response = await fetchApi.get(
                 `/recoleccion/obtener_ruta/`,
             );
-            
-            console.log(response.data)
 
             return response.data;
-
 
         } catch (error) {
             console.error(error);

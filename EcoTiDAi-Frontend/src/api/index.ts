@@ -1,9 +1,9 @@
 import * as PuntoRecoleccion from './puntoPendiente'
 import * as Historico from './historico'
-import * as Ruta from './ruta'
+import * as Rutas from './rutas'
 
 export {
     PuntoRecoleccion,
     Historico,
-    Ruta
+    Rutas
 }

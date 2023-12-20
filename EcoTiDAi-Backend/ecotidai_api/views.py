@@ -101,7 +101,6 @@ class PuntoRecoleccionViewSet(viewsets.ModelViewSet):
         
         data = queryset_to_dataframe(queryset, columns, types)
         response = get_route(data)
-        warnings.warn(str(response))
 
         return Response(response, status=status.HTTP_200_OK)
     

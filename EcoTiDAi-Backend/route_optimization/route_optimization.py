@@ -13,6 +13,8 @@ from pymoo.termination.default import DefaultSingleObjectiveTermination
 from pymoo.core.problem import ElementwiseProblem
 from pymoo.core.repair import Repair
 import os
+from datetime import datetime
+import warnings
 
 
 class RecolectionRoute(ElementwiseProblem):
@@ -179,15 +181,9 @@ def route_configuration(data):
 
     A = pd.DataFrame()
 
-    print('lat: ', data['latitud'])
-    print('long: ', data['longitud'])
-    print('total_llantas: ', data['total_llantas'])
-
     A['x'] = data['latitud'].tolist()
     A['y'] = data['longitud'].tolist()
     A['tires'] = data['total_llantas'].tolist()
-
-    print(A)
 
     A = A[A['x'] > 4 ]
     A = A[A['x'] < 5 ]
@@ -199,7 +195,6 @@ def route_configuration(data):
     T = W.copy()
     T['Cluster'] = kmeans.predict(W)
     T['tires'] = A['tires']
-    #color = list(mcolors.CSS4_COLORS.values())
     nClusters = 50
     
     xvec = []
@@ -213,18 +208,14 @@ def route_configuration(data):
             ys = 0
             ts = 0
             for j in range(0,len(cluster)):
-                print(cluster['x'].iloc[j] , cluster['y'].iloc[j])
-                #x, y, s1, s2 = utm.from_latlon( cluster['x'].iloc[j] , cluster['y'].iloc[j] )
                 x = cluster['x'].iloc[j]
                 y = cluster['y'].iloc[j]
                 xs = xs + x
                 ys = ys + y
                 ts = cluster['tires'].iloc[j]
-                #plt.plot(x,y,'go',alpha=0.5)
             interdist.append(len(cluster)*1.32)
             xs = xs/len(cluster)
             ys = ys/len(cluster)
-            #plt.plot(xs,ys,'bo',alpha=0.6)
             xvec.append(xs)
             yvec.append(ys)
             tires.append(ts)
@@ -237,18 +228,15 @@ def routeopt(maxtime,tires,xvec,yvec,interdist):
 
     xpart, ypart, s1, s2 = utm.from_latlon( -74.10622205211465,4.710107141594455 )
 
-    Dmatcopy = copy.deepcopy(Dmat)
-    xvecn     =copy.deepcopy(xvec)
-    yvecn=copy.deepcopy(yvec)
-    tiresn=copy.deepcopy(tires)
+    Dmatcopy   = copy.deepcopy(Dmat)
+    xvecn      = copy.deepcopy(xvec)
+    yvecn      = copy.deepcopy(yvec)
+    tiresn     = copy.deepcopy(tires)
     
-    interdistn=copy.deepcopy(interdist)
+    interdistn = copy.deepcopy(interdist)
 
-    print("xvec: ", xvecn)
-    print("yvec: ", yvecn)
-    print("tires: ", tiresn)
-    print("interdist: ", interdistn)
     routesvec  = []
+    
     s = 0
     clust = list(np.arange(len(yvec)))
     while len(xvecn) > 5:
@@ -276,26 +264,16 @@ def routeopt(maxtime,tires,xvec,yvec,interdist):
 
         route, dist, tires = inform(problem, res.X)
         dist.append(0.0)
-        #figure = visualize(problem, res.X)
-        #figure.savefig("output"+str(s)+".png")
-        #route.sort(reverse=True)
+        
         data = pd.DataFrame(route,columns=['points'])
 
-        #print(route)
-        #print(data)
-
-        #print(dist)
-
-        #print(tires)
 
         data['x']=data['points'].map(lambda x: xvec[x])
         data['y']=data['points'].map(lambda x: yvec[x])
         data['cluster']=data['points'].map(lambda x: clust[x])
         data['tires']= tires
         data['distance']=dist
-        data['case'] = s
-
-        
+        data['case'] = s        
                         
         s = s + 1
         route.sort(reverse=True)
@@ -316,4 +294,4 @@ def routeopt(maxtime,tires,xvec,yvec,interdist):
 def get_route(data):
     T ,xvec,yvec,interdist, tires = route_configuration(data)
     routesvec = routeopt(600,tires,xvec,yvec,interdist)
-    return [route.to_dict('records') for route in routesvec][0]
+    return [{"puntos": route.to_dict('records')} for route in routesvec]

@@ -13,11 +13,11 @@ const { Provider: StoreProvider } = StoreContext;
 function createRootStore() {
   const puntosPendientes = new PuntosPendientesStore({})
   const historico = new HistoricoStore({});
-  const ruta = new RutaStore({});
+  const clusters = new RutaStore({});
   const rootStore = new RootStore({
     puntosPendientes,
     historico,
-    ruta,
+    clusters,
   });
 
   registerRootStore(rootStore);
