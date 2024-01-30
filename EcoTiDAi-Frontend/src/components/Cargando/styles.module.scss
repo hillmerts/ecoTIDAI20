@@ -1,0 +1,30 @@
+.container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 90% !important;
+    padding: 32px 15px;
+  
+    :global(.spinner-border) {
+      color: var(--funGreen);
+    }
+  
+    &.full {
+      height: 100%;
+    }
+  
+    .bpLogo {
+      margin-bottom: 10px;
+    }
+  
+    &.small {
+      padding: 15px;
+  
+      :global(.spinner-border) {
+        height: 1rem;
+        width: 1rem;
+      }
+    }
+  }
+  

@@ -1,0 +1,19 @@
+.layout {
+    width: 100%;
+}
+.mapa {
+    width: 100%;
+}
+.anterior{
+    position: absolute;
+    left: 20px;
+    bottom: 30px;
+    z-index: 500;
+}
+
+.siguiente{
+    position: absolute;
+    right: 20px;
+    bottom: 30px;
+    z-index: 500;
+}

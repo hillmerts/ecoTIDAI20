@@ -1,0 +1,49 @@
+.layout {
+    width: 100%;
+    display: flex;
+}
+
+.mapa {
+    flex: 50%;
+}
+
+.info {
+    display: inline-block;
+    flex-direction: row-reverse;
+    padding-left: 1%;
+    flex: 49%;
+}
+
+table {
+    width: 100%;
+}
+
+.td {
+    width: 30%;
+    padding-left: 1%;
+    padding-right: 1%;
+    text-align: right;
+    border-radius: 5%;
+    border-color: gray;
+    border-width: 2px;
+}
+
+.tdRecoleccion {
+    width: 5%;
+    border-radius: 5%;
+    text-align: center;
+    border-color: gray;
+    border-width: 2px;
+}
+
+.focused:focus {
+    border-color: red;
+    background-color: rgb(244, 146, 146) !important;
+}
+
+.resumenLlantas {
+    background-color: green;
+    color: aliceblue;
+    align-items: center;
+    width: 100%;
+}

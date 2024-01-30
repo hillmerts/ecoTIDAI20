@@ -1,0 +1,16 @@
+services:
+  api:
+    build: ./EcoTiDAi-Backend        
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./EcoTiDAi-Backend:/EcoTiDAi-Backend
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+
+  web:
+    build: ./EcoTiDAi-Frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./EcoTiDAi-Frontend:/EcoTiDAi-Frontend
+    command: bash -c "npm start"
